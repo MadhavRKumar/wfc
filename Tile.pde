@@ -55,9 +55,9 @@ class Tile {
       for (int j = 0; j < tileWidth; j++) {
         int thisIndex = (y+i)*img.width + (x+j);
         color c = img.pixels[thisIndex];
-        val += red(c);
-        val += green(c);
-        val += blue(c);
+        val += red(c)*3;
+        val += green(c)*5;
+        val += blue(c)*7;
       }
     }
     
