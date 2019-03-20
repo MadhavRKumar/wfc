@@ -32,6 +32,8 @@ class Tile {
 
     Tile other = (Tile)obj;
     img.loadPixels();
+    
+    // pixel comparision
     for (int i = 0; i < tileHeight; i++) {
       for (int j = 0; j < tileWidth; j++) {
         int thisIndex = (y+i)*img.width + (x+j);

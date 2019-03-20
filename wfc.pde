@@ -69,9 +69,8 @@ HashMap<Tile, Integer> calculateWeights(int n, int m) {
       Tile newTile = new Tile(j, i, n, m);
       if (!weights.containsKey(newTile)) {
         weights.put(newTile, 0);
-      }
-      else {
-       weights.put(newTile, weights.get(newTile)+1);
+      } else {
+        weights.put(newTile, weights.get(newTile)+1);
       }
     }
   }
@@ -88,24 +87,14 @@ void fileSelected(File f) {
   //Generate tile compatibilities and weights from input image 
   HashSet<Compatibility> compats = parseInput(img, dimensionX, dimensionY);
   HashMap<Tile, Integer> weights = calculateWeights(dimensionX, dimensionY);
-   
-
 }
 
 
 void setup() {
   noiseSeed(seed);
   randomSeed(seed);
-  size(1000, 1000);
   selectInput("Select file to process: ", "fileSelected");
 }
-
-
-void draw() {
-}
-
-
-
 
 void keyPressed() {
   if (keyCode == ENTER) {

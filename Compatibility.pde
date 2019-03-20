@@ -1,6 +1,6 @@
 /*
-  This is a wrapper class that establishes what tiles can be next to each other
- and in what direction they can be next to each other
+  This is a class that establishes what tiles can be next to each other
+   and in what direction they can be next to each other
  */
 
 class Compatibility {
