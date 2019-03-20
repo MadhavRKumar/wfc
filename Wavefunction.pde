@@ -11,7 +11,6 @@ class Wavefunction {
     this.outputWidth = outputWidth;
     this.outputHeight = outputHeight;
     initCoefficients(weights.keySet());
-    coefficients = new Set[outputHeight][outputWidth];
   }
 
 
@@ -21,6 +20,7 @@ class Wavefunction {
    single tile should be possible at every position.
    */
   void initCoefficients(Set<Tile> tiles) {
+    coefficients = new Set[outputHeight][outputWidth];
     for (int y =0; y < outputHeight; y++) {
       for (int x = 0; x < outputWidth; x++) {
         Set<Tile> toAdd = new HashSet<Tile>(tiles);
@@ -35,6 +35,18 @@ class Wavefunction {
    */
   Set<Tile> get(int x, int y) {
     return coefficients[y][x];
+  }
+  
+  /*
+  Gets the singular tile at location (x,y) once it 
+  has been collapsed. Return null if not collapsed.
+  
+  TODO: add actual error handling
+  */
+  Tile getCollapsed(int x, int y) {
+    if(get(x,y).size() > 1) return null;
+    
+    return get(x,y).iterator().next();
   }
 
 
@@ -62,7 +74,7 @@ class Wavefunction {
    from the weights map.
    */
 
-  void collpase(int x, int y) {
+  void collapse(int x, int y) {
     Set<Tile> tiles = coefficients[y][x];
     float sum = 0;    
     for(Tile t : tiles) {
@@ -83,19 +95,29 @@ class Wavefunction {
     coefficients[y][x] = set;
     
   }
+  
+  
+  void constrain(int x, int y, Tile forbidden) {
+    
+    coefficients[y][x].remove(forbidden);
+    
+  }
+  
+  
+  
 
   /*
   Finds the Shannon Entropy at location (x,y)
    In simpler terms, it finds how "unknown" the current tile is.
    The more possible tiles, the higher the entropy.
    */
-  double shannonEntropy(int x, int y) {
+  double getShannonEntropy(int x, int y) {
     double weightSum = 0;
     double logWeightSum = 0;
 
     for (Tile t : coefficients[y][x]) {
       double weight = weights.get(t);
-      weightSum += weight;
+      weightSum += weight; //<>//
       logWeightSum += weight * Math.log(weight);
     }
 

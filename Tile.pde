@@ -2,10 +2,10 @@
 class Tile {
   int x;
   int y;
-  float tileWidth; 
-  float tileHeight;
+  int tileWidth; 
+  int tileHeight;
 
-  public Tile(int x, int y, float N, float M) {
+  public Tile(int x, int y, int N, int M) {
     this.x = x;
     this.y = y;
     this.tileWidth = N;

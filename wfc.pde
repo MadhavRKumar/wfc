@@ -2,6 +2,7 @@ import java.util.HashSet;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.Stack;
 
 long seed = System.nanoTime();
 
@@ -27,7 +28,7 @@ HashSet<Compatibility> parseInput(PImage img, int n, int m) {
   for (int i = 0; i < img.height; i+=m) {
     for (int j = 0; j < img.width; j+=n) {
       Tile newTile = new Tile(j, i, n, m);
-      ArrayList<Direction> validDirs = getValidDirections(j, i);
+      ArrayList<Direction> validDirs = getValidDirections(j, i, img.width, img.height);
       for (Direction d : validDirs) {
         Tile otherTile = new Tile(j+d.x, i+d.y, n, m);
         Compatibility compat = new Compatibility(newTile, otherTile, d);
@@ -39,7 +40,7 @@ HashSet<Compatibility> parseInput(PImage img, int n, int m) {
   return compats;
 }
 
-ArrayList<Direction> getValidDirections(int x, int y) {
+ArrayList<Direction> getValidDirections(int x, int y, int w, int h) {
 
   ArrayList<Direction> dirs = new ArrayList<Direction>();
 
@@ -47,7 +48,7 @@ ArrayList<Direction> getValidDirections(int x, int y) {
     dirs.add(up);
   }
 
-  if (y+1 < img.height) {
+  if (y+1 < h) {
     dirs.add(down);
   }
 
@@ -55,7 +56,7 @@ ArrayList<Direction> getValidDirections(int x, int y) {
     dirs.add(left);
   }
 
-  if (x+1 < img.width) {
+  if (x+1 < w) {
     dirs.add(right);
   }
 
@@ -68,9 +69,10 @@ HashMap<Tile, Integer> calculateWeights(int n, int m) {
     for (int j = 0; j < img.width; j+=n) {
       Tile newTile = new Tile(j, i, n, m);
       if (!weights.containsKey(newTile)) {
-        weights.put(newTile, 0);
-      } else {
-        weights.put(newTile, weights.get(newTile)+1);
+        weights.put(newTile, 1);
+      }
+      else {
+       weights.put(newTile, weights.get(newTile)+1);
       }
     }
   }
@@ -87,14 +89,25 @@ void fileSelected(File f) {
   //Generate tile compatibilities and weights from input image 
   HashSet<Compatibility> compats = parseInput(img, dimensionX, dimensionY);
   HashMap<Tile, Integer> weights = calculateWeights(dimensionX, dimensionY);
+  Model model = new Model(weights, compats);
+  model.run();
+
 }
 
 
 void setup() {
   noiseSeed(seed);
   randomSeed(seed);
+  size(10, 10);
   selectInput("Select file to process: ", "fileSelected");
 }
+
+
+void draw() {
+}
+
+
+
 
 void keyPressed() {
   if (keyCode == ENTER) {
