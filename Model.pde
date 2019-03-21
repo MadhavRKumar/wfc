@@ -1,4 +1,8 @@
- //<>//
+/* //<>//
+Model class does most of the work. It runs the loop and observes 
+and propagates the wavefunction
+
+*/
 class Model {
   Wavefunction wf; 
   HashSet<Compatibility> compats;
@@ -11,16 +15,22 @@ class Model {
 
   void run() {
     while (!wf.isFullyCollapsed()) { //<>//
+      // Observation
       PVector coords = findMinEntropy(); //<>//
       int x = (int)coords.x;
       int y = (int)coords.y;
       wf.collapse(x, y);
+      
+      // Propagation
       propagate(x, y); //<>//
     }
-
+    // Output Observations
     displayImage();
   }
-
+  
+  /*
+  Propagation starts at collapsed wavefunction and causes changes to ripple outwards
+  */
   void propagate(int x, int y) {
     Stack<PVector> stack = new Stack<PVector>(); //<>//
     stack.push(new PVector(x,y));
@@ -31,18 +41,28 @@ class Model {
       int curY = (int)curTile.y;
       Set<Tile> curPossibleTiles = wf.get(curX, curY);
 
+
+      // start by looking at possible neigbhors
       for (Direction dir : getValidDirections(curX, curY, wf.outputWidth, wf.outputHeight, 1)) {
         int otherX = curX + (dir.x);
         int otherY = curY + (dir.y);
 
         Set<Tile> iter = new HashSet<Tile>(wf.get(otherX, otherY));
+        
+        // consider every possible tile at neighboring location
         for (Tile other : iter) {
           boolean isOtherTilePossible = false;
-
+          
+          // checks compatibility between all the current possible tiles
+          // and the other possible tile
           for (Tile t : curPossibleTiles) {
             Compatibility compat = new Compatibility(t, other, dir);
             isOtherTilePossible = isOtherTilePossible || compats.contains(compat);
           }
+          
+          // if the tile in the neighboring position cannot exist
+          // it is removed. since it has been updated we must propagate
+          // its changes as well, so it is added to the stack
           if (!isOtherTilePossible) {
             wf.constrain(otherX, otherY, other);
             stack.push(new PVector(otherX, otherY));

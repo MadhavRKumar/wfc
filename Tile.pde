@@ -1,4 +1,8 @@
-
+/*
+  Tile class holds the pattern information.
+  (x,y) in this case refers to the pixels in the
+  input image.
+*/
 class Tile {
   int x;
   int y;
@@ -81,7 +85,11 @@ class Tile {
     
     return val;
   }
-
+  
+  
+  /*
+  For debugging purposes, currently just prints color value of first pixel
+  */
   @Override
     public String toString() {
      img.loadPixels();

@@ -1,4 +1,7 @@
-
+/*
+Wavefunction holds all the observed and unobserved states.
+Can be thought of as a three-dimensional array.
+*/
 
 class Wavefunction {
   HashMap<Tile, Integer> weights;

@@ -9,10 +9,10 @@ long seed = System.nanoTime();
 //input that the output is based on
 PImage img = new PImage();
 
-final int dimension = 4;
+final int dimension = 2;
 void settings() {
-  int w = (int)Math.pow(dimension, 4);
-  size(w,w);
+  int w = (int)Math.pow(dimension, 8);
+  size(w, w);
 }
 
 
@@ -27,7 +27,11 @@ final Direction[] DIRS = {up, down, left, right};
 
 
 
-
+/*
+  Goes through the input image and breaks it into NxM patterns.
+ For each NxM pattern (or tile) it then looks around and creates
+ compatibilities with its neighboring tiles
+ */
 HashSet<Compatibility> parseInput(PImage img, int n, int m) {
   HashSet<Compatibility> compats = new HashSet<Compatibility>();
 
@@ -46,6 +50,11 @@ HashSet<Compatibility> parseInput(PImage img, int n, int m) {
   return compats;
 }
 
+
+/*
+Generic helper function that gives valid directions based on position, grid dimensions,
+ and increment value.
+ */
 ArrayList<Direction> getValidDirections(int x, int y, int w, int h, int inc) {
 
   ArrayList<Direction> dirs = new ArrayList<Direction>();
@@ -69,6 +78,11 @@ ArrayList<Direction> getValidDirections(int x, int y, int w, int h, int inc) {
   return dirs;
 }
 
+
+/*
+Like parseInput, this goes through the input but calculates
+ the weight of eache pattern(tile) and puts it into a dictionary
+ */
 HashMap<Tile, Integer> calculateWeights(int n, int m) {
   HashMap<Tile, Integer> weights = new HashMap<Tile, Integer>();
   for (int i = 0; i < img.height; i+=m) {
@@ -76,9 +90,8 @@ HashMap<Tile, Integer> calculateWeights(int n, int m) {
       Tile newTile = new Tile(j, i, n, m);
       if (!weights.containsKey(newTile)) {
         weights.put(newTile, 1);
-      }
-      else {
-       weights.put(newTile, weights.get(newTile)+1);
+      } else {
+        weights.put(newTile, weights.get(newTile)+1);
       }
     }
   }
@@ -89,14 +102,15 @@ HashMap<Tile, Integer> calculateWeights(int n, int m) {
 
 
 void fileSelected(File f) {
-  img = loadImage(f.getPath());
+  if (f != null) {
+    img = loadImage(f.getPath());
 
-  //Generate tile compatibilities and weights from input image 
-  HashSet<Compatibility> compats = parseInput(img, dimension, dimension);
-  HashMap<Tile, Integer> weights = calculateWeights(dimension, dimension);
-  Model model = new Model(weights, compats);
-  model.run();
-
+    //Generate tile compatibilities and weights from input image 
+    HashSet<Compatibility> compats = parseInput(img, dimension, dimension);
+    HashMap<Tile, Integer> weights = calculateWeights(dimension, dimension);
+    Model model = new Model(weights, compats);
+    model.run();
+  }
 }
 
 
