@@ -11,6 +11,22 @@ class Tile {
     this.tileWidth = N;
     this.tileHeight = M;
   }
+  
+  
+  void drawAt(int x, int y) {
+   loadPixels();
+   img.loadPixels();
+   for(int i = x, inputX = this.x; i < x+tileWidth; i++, inputX++) {
+    for(int j = y, inputY = this.y; j < y+tileHeight; j++, inputY++) {
+      int outputIndex = j*width + i;
+      int inputIndex = inputY*img.width + inputX;
+      
+      pixels[outputIndex] = img.pixels[inputIndex];
+     }
+   }
+   
+   updatePixels();
+  }
 
   /*
     Tests equality of tile by checking to see if every pixel is the same
@@ -68,6 +84,9 @@ class Tile {
 
   @Override
     public String toString() {
-    return "[" + this.x + "," + this.y + "]";
+     img.loadPixels();
+     int thisIndex = (y)*img.width + (x);
+     color c = img.pixels[thisIndex];
+    return "[" + this.x + "," + this.y + "] " + hex(c);
   }
 }

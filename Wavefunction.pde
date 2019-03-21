@@ -8,9 +8,10 @@ class Wavefunction {
 
   public Wavefunction(int outputWidth, int outputHeight, HashMap<Tile, Integer> weights) {
     this.weights = weights;
-    this.outputWidth = outputWidth;
-    this.outputHeight = outputHeight;
+    this.outputWidth = outputWidth/dimension;
+    this.outputHeight = outputHeight/dimension;
     initCoefficients(weights.keySet());
+    
   }
 
 
@@ -44,7 +45,9 @@ class Wavefunction {
   TODO: add actual error handling
   */
   Tile getCollapsed(int x, int y) {
-    if(get(x,y).size() > 1) return null;
+    if(get(x,y).size() != 1){
+      throw new NotCollapsedException("This location is not collapsed. Current number of possible tiles: " + get(x,y).size());
+    };
     
     return get(x,y).iterator().next();
   }
@@ -93,14 +96,14 @@ class Wavefunction {
     Set<Tile> set = new HashSet<Tile>();
     set.add(chosen);
     coefficients[y][x] = set;
-    
   }
   
   
   void constrain(int x, int y, Tile forbidden) {
-    
+    //println("before constrain: " + coefficients[y][x].size());
     coefficients[y][x].remove(forbidden);
-    
+    //println("constrain size: " + coefficients[y][x].size());
+
   }
   
   
@@ -111,16 +114,38 @@ class Wavefunction {
    In simpler terms, it finds how "unknown" the current tile is.
    The more possible tiles, the higher the entropy.
    */
-  double getShannonEntropy(int x, int y) {
+  double getShannonEntropy(int x, int y) { //<>//
     double weightSum = 0;
     double logWeightSum = 0;
 
     for (Tile t : coefficients[y][x]) {
       double weight = weights.get(t);
-      weightSum += weight; //<>//
+      weightSum += weight;
       logWeightSum += weight * Math.log(weight);
     }
 
     return Math.log(weightSum) - (logWeightSum/weightSum);
+  }
+  
+  
+  
+  @Override
+  public String toString() {
+   String ret = "";
+   for(Set<Tile> [] row : coefficients) {
+    for(Set<Tile> s : row) {
+        ret += s.size() + " ";
+      }
+      ret += "\n";
+   }
+   
+   return ret;
+  }
+}
+
+
+public class NotCollapsedException extends RuntimeException {
+  public NotCollapsedException(String message) {
+     super(message); 
   }
 }

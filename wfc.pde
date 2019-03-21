@@ -9,6 +9,8 @@ long seed = System.nanoTime();
 //input that the output is based on
 PImage img = new PImage();
 
+ final int dimension = 2;
+
 
 
 final Direction up = new Direction(0, -1);
@@ -28,9 +30,9 @@ HashSet<Compatibility> parseInput(PImage img, int n, int m) {
   for (int i = 0; i < img.height; i+=m) {
     for (int j = 0; j < img.width; j+=n) {
       Tile newTile = new Tile(j, i, n, m);
-      ArrayList<Direction> validDirs = getValidDirections(j, i, img.width, img.height);
+      ArrayList<Direction> validDirs = getValidDirections(j, i, img.width, img.height, dimension);
       for (Direction d : validDirs) {
-        Tile otherTile = new Tile(j+d.x, i+d.y, n, m);
+        Tile otherTile = new Tile(j+d.x*dimension, i+d.y*dimension, n, m);
         Compatibility compat = new Compatibility(newTile, otherTile, d);
         compats.add(compat);
       }
@@ -40,23 +42,23 @@ HashSet<Compatibility> parseInput(PImage img, int n, int m) {
   return compats;
 }
 
-ArrayList<Direction> getValidDirections(int x, int y, int w, int h) {
+ArrayList<Direction> getValidDirections(int x, int y, int w, int h, int inc) {
 
   ArrayList<Direction> dirs = new ArrayList<Direction>();
 
-  if (y-1 >= 0) {
+  if (y-(inc) >= 0) {
     dirs.add(up);
   }
 
-  if (y+1 < h) {
+  if (y+(inc) < h) {
     dirs.add(down);
   }
 
-  if (x-1 >= 0) {
+  if (x-(inc) >= 0) {
     dirs.add(left);
   }
 
-  if (x+1 < w) {
+  if (x+(inc) < w) {
     dirs.add(right);
   }
 
@@ -84,21 +86,24 @@ HashMap<Tile, Integer> calculateWeights(int n, int m) {
 
 void fileSelected(File f) {
   img = loadImage(f.getPath());
-  int dimensionX = 1, dimensionY = 1;
 
   //Generate tile compatibilities and weights from input image 
-  HashSet<Compatibility> compats = parseInput(img, dimensionX, dimensionY);
-  HashMap<Tile, Integer> weights = calculateWeights(dimensionX, dimensionY);
+  HashSet<Compatibility> compats = parseInput(img, dimension, dimension);
+  HashMap<Tile, Integer> weights = calculateWeights(dimension, dimension);
   Model model = new Model(weights, compats);
   model.run();
 
+}
+
+void settings() {
+  int w = (int)Math.pow(dimension, 8);
+  size(w,w);
 }
 
 
 void setup() {
   noiseSeed(seed);
   randomSeed(seed);
-  size(10, 10);
   selectInput("Select file to process: ", "fileSelected");
 }
 
