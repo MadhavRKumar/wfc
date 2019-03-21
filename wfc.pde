@@ -9,7 +9,11 @@ long seed = System.nanoTime();
 //input that the output is based on
 PImage img = new PImage();
 
- final int dimension = 2;
+final int dimension = 4;
+void settings() {
+  int w = (int)Math.pow(dimension, 4);
+  size(w,w);
+}
 
 
 
@@ -95,10 +99,6 @@ void fileSelected(File f) {
 
 }
 
-void settings() {
-  int w = (int)Math.pow(dimension, 8);
-  size(w,w);
-}
 
 
 void setup() {
