@@ -116,14 +116,28 @@ class Model {
     
     //println(wf);
     
-    for(int x = 0; x < wf.outputWidth; x++) {
-     for(int y = 0; y < wf.outputHeight; y++) {
-        Tile t = wf.getCollapsed(x,y);
-        t.drawAt(x*dimension, y*dimension);
+    //for(int x = 0; x < wf.outputWidth; x++) {
+    // for(int y = 0; y < wf.outputHeight; y++) {
+    //    Tile t = wf.getCollapsed(x,y);
+    //    t.drawAt(x*dimension, y*dimension);
 
-     }
+    // }
+    //}
+    //int halfX = floor(wf.outputWidth/2);
+    //int halfY = floor(wf.outputHeight/2);
+    //f
+    //DrawThread d1 = new DrawThread(0, 0, halfX, wf.outputHeight, wf);
+    //d1.start();
+    
+    //DrawThread d2 = new DrawThread(halfX, 0, wf.outputWidth, wf.outputHeight, wf);
+    //d2.start();
+    int THREAD_COUNT = dimension;
+    int inc = floor(wf.outputWidth/THREAD_COUNT);
+    for(int i = 0; i < THREAD_COUNT; i++) {
+      DrawThread d = new DrawThread(i*inc, 0, (i+1)*inc, wf.outputHeight, wf);
+      d.start();
     }
-
+       
     System.out.println("DONE?");
   }
 }

@@ -9,9 +9,9 @@ long seed = System.nanoTime();
 //input that the output is based on
 PImage img = new PImage();
 
-final int dimension = 4;
+final int dimension = 3;
 void settings() {
-  int w = (int)Math.pow(dimension, 5);
+  int w = (int)Math.pow(dimension, 6);
   size(w, w);
 }
 
@@ -125,6 +125,7 @@ void setup() {
 
 
 void draw() {
+  noLoop();
 }
 
 

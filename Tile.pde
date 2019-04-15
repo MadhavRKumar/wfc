@@ -18,7 +18,6 @@ class Tile {
   
   
   void drawAt(int x, int y) {
-   loadPixels();
    img.loadPixels();
    for(int i = x, inputX = this.x; i < x+tileWidth; i++, inputX++) {
     for(int j = y, inputY = this.y; j < y+tileHeight; j++, inputY++) {
@@ -29,7 +28,6 @@ class Tile {
      }
    }
    
-   updatePixels();
   }
 
   /*
