@@ -11,7 +11,7 @@ PImage img = new PImage();
 
 final int dimension = 3;
 void settings() {
-  int w = (int)Math.pow(dimension, 6);
+  int w = (int)Math.pow(dimension, 5);
   size(w, w);
 }
 

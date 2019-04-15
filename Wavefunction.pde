@@ -6,6 +6,7 @@ Can be thought of as a three-dimensional array.
 class Wavefunction {
   HashMap<Tile, Integer> weights;
   Set<Tile>[][] coefficients;
+  
   int outputWidth;
   int outputHeight;
 

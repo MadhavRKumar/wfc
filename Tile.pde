@@ -24,7 +24,9 @@ class Tile {
       int outputIndex = j*width + i;
       int inputIndex = inputY*img.width + inputX;
       
+      if(outputIndex < pixels.length && inputIndex < img.pixels.length) {
       pixels[outputIndex] = img.pixels[inputIndex];
+      }
      }
    }
    
@@ -56,9 +58,11 @@ class Tile {
       for (int j = 0; j < tileWidth; j++) {
         int thisIndex = (y+i)*img.width + (x+j);
         int otherIndex = (other.y+i)*img.width + (other.x + j);
+        if(thisIndex < img.pixels.length && otherIndex < img.pixels.length) {
 
         if (img.pixels[thisIndex] != img.pixels[otherIndex]) {
           return false;
+        }
         }
       }
     }
@@ -74,6 +78,7 @@ class Tile {
     for (int i = 0; i < tileHeight; i++) {
       for (int j = 0; j < tileWidth; j++) {
         int thisIndex = (y+i)*img.width + (x+j);
+        if(thisIndex < img.pixels.length) {
         color c = img.pixels[thisIndex];
         float r = (c >> 16) & 0xFF;
         val += r*3;
@@ -82,6 +87,7 @@ class Tile {
         
         float b = c & 0xFF;
         val += b*7;
+        }
       }
     }
     
