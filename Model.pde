@@ -14,6 +14,8 @@ class Model {
 
 
   void run() {
+       long time = System.nanoTime();
+    
     while (!wf.isFullyCollapsed()) { //<>//
       // Observation
       PVector coords = findMinEntropy(); //<>//
@@ -24,8 +26,13 @@ class Model {
       // Propagation
       propagate(x, y); //<>//
     }
+        println((System.nanoTime() - time)/1e9);
+
+ time = System.nanoTime();
     // Output Observations
     displayImage();
+            println((System.nanoTime() - time)/1e9);
+
   }
   
   /*
@@ -72,6 +79,7 @@ class Model {
       }
       //println(wf);
     }
+
   } //<>//
 
 

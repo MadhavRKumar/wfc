@@ -9,9 +9,9 @@ long seed = System.nanoTime();
 //input that the output is based on
 PImage img = new PImage();
 
-final int dimension = 2;
+final int dimension = 4;
 void settings() {
-  int w = (int)Math.pow(dimension, 8);
+  int w = (int)Math.pow(dimension, 5);
   size(w, w);
 }
 
@@ -108,8 +108,10 @@ void fileSelected(File f) {
     //Generate tile compatibilities and weights from input image 
     HashSet<Compatibility> compats = parseInput(img, dimension, dimension);
     HashMap<Tile, Integer> weights = calculateWeights(dimension, dimension);
+
     Model model = new Model(weights, compats);
     model.run();
+ 
   }
 }
 
