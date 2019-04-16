@@ -1,12 +1,12 @@
-/*
+/* //<>//
 Wavefunction holds all the observed and unobserved states.
-Can be thought of as a three-dimensional array.
-*/
+ Can be thought of as a three-dimensional array.
+ */
 
 class Wavefunction {
   HashMap<Tile, Integer> weights;
   Set<Tile>[][] coefficients;
-  
+
   int outputWidth;
   int outputHeight;
 
@@ -15,7 +15,6 @@ class Wavefunction {
     this.outputWidth = outputWidth/dimension;
     this.outputHeight = outputHeight/dimension;
     initCoefficients(weights.keySet());
-    
   }
 
 
@@ -41,19 +40,17 @@ class Wavefunction {
   Set<Tile> get(int x, int y) {
     return coefficients[y][x];
   }
-  
+
   /*
   Gets the singular tile at location (x,y) once it 
-  has been collapsed. Return null if not collapsed.
-  
-  TODO: add actual error handling
-  */
+   has been collapsed. Return null if not collapsed.
+   */
   Tile getCollapsed(int x, int y) {
-    if(get(x,y).size() != 1){
-      throw new NotCollapsedException("This location is not collapsed. Current number of possible tiles: " + get(x,y).size());
+    if (get(x, y).size() != 1) {
+      throw new NotCollapsedException("This location is not collapsed. Current number of possible tiles: " + get(x, y).size());
     };
-    
-    return get(x,y).iterator().next();
+
+    return get(x, y).iterator().next();
   }
 
 
@@ -84,41 +81,41 @@ class Wavefunction {
   void collapse(int x, int y) {
     Set<Tile> tiles = coefficients[y][x];
     float sum = 0;    
-    for(Tile t : tiles) {
-       sum += weights.get(t);
+    for (Tile t : tiles) {
+      sum += weights.get(t);
     }
-    
+
     sum *= random(1);
     Tile chosen = null;
-    for(Tile t : tiles) {
+    for (Tile t : tiles) {
       sum -= weights.get(t);
-      if(sum < 0) {
-         chosen = t;
-         break;
+      if (sum < 0) {
+        chosen = t;
+        break;
       }
     }
     Set<Tile> set = new HashSet<Tile>();
     set.add(chosen);
     coefficients[y][x] = set;
   }
-  
-  
-  void constrain(int x, int y, Tile forbidden) {
-    //println("before constrain: " + coefficients[y][x].size());
-    coefficients[y][x].remove(forbidden);
-    //println("constrain size: " + coefficients[y][x].size());
 
+/*
+  The wavefunction removes that tiles from the list of possible
+  tiles
+*/ 
+  void constrain(int x, int y, Tile forbidden) {
+    coefficients[y][x].remove(forbidden);
   }
-  
-  
-  
+
+
+
 
   /*
   Finds the Shannon Entropy at location (x,y)
    In simpler terms, it finds how "unknown" the current tile is.
    The more possible tiles, the higher the entropy.
    */
-  double getShannonEntropy(int x, int y) { //<>//
+  double getShannonEntropy(int x, int y) {
     double weightSum = 0;
     double logWeightSum = 0;
 
@@ -130,26 +127,30 @@ class Wavefunction {
 
     return Math.log(weightSum) - (logWeightSum/weightSum);
   }
-  
-  
-  
+
+
+
   @Override
-  public String toString() {
-   String ret = "";
-   for(Set<Tile> [] row : coefficients) {
-    for(Set<Tile> s : row) {
+    public String toString() {
+    String ret = "";
+    for (Set<Tile> [] row : coefficients) {
+      for (Set<Tile> s : row) {
         ret += s.size() + " ";
       }
       ret += "\n";
-   }
-   
-   return ret;
+    }
+
+    return ret;
   }
 }
 
 
+/*
+  Error class that happens when the wavefunction attempts to access a tile that isn't properly collapsed.
+  This could be that there is 0 or more than 1 tiles possible at that location.
+*/
 public class NotCollapsedException extends RuntimeException {
   public NotCollapsedException(String message) {
-     super(message); 
+    super(message);
   }
 }

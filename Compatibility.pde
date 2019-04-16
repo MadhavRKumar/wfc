@@ -1,6 +1,6 @@
 /*
   This is a class that establishes what tiles can be next to each other
-   and in what direction they can be next to each other
+ and in what direction they can be next to each other
  */
 
 class Compatibility {
@@ -31,11 +31,11 @@ class Compatibility {
 
     return other.curTile.equals(curTile) && other.otherTile.equals(otherTile) && direction.equals(other.direction);
   }
-  
+
   @Override
     public int hashCode() {
-     return curTile.hashCode() + otherTile.hashCode() + direction.hashCode(); 
-    }
+    return curTile.hashCode() + otherTile.hashCode() + direction.hashCode();
+  }
 
   @Override
     public String toString() {

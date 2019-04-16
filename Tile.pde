@@ -1,15 +1,15 @@
 /*
   Tile class holds the pattern information.
-  (x,y) in this case refers to the pixels in the
-  input image.
-*/
+ (x,y) in this case refers to the pixels in the
+ input image.
+ */
 class Tile {
   int x;
   int y;
   int tileWidth; 
   int tileHeight;
   color[] tilePixels;
-  
+
   public Tile(int x, int y, int N, int M) {
     this.x = x;
     this.y = y;
@@ -19,36 +19,40 @@ class Tile {
     fillPixels();
   }
   
+  /*
+  Takes the pixels from the image and keeps them in its own pixel array.
+  This allows us to avoid having to access the image constantly and saves
+  some time.
+  */
   void fillPixels() {
     img.loadPixels();
-    for(int i = 0, inputX = this.x; i < tileWidth; i++, inputX++) {
-      for(int j = 0, inputY = this.y; j < tileHeight; j++, inputY++) {
-      int outputIndex = j*tileWidth + i;
-      int inputIndex = inputY*img.width + inputX;
-      
-      if(outputIndex < tilePixels.length && inputIndex < img.pixels.length) {
-        tilePixels[outputIndex] = img.pixels[inputIndex];
-      }
-     }
-   }
-    
+    for (int i = 0, inputX = this.x; i < tileWidth; i++, inputX++) {
+      for (int j = 0, inputY = this.y; j < tileHeight; j++, inputY++) {
+        int outputIndex = j*tileWidth + i;
+        int inputIndex = inputY*img.width + inputX;
 
-  }
-  
-  
-  void drawAt(int x, int y) {
-   img.loadPixels();
-   for(int i = x, inputX = 0; i < x+tileWidth; i++, inputX++) {
-    for(int j = y, inputY = 0; j < y+tileHeight; j++, inputY++) {
-      int outputIndex = j*width + i;
-      int inputIndex = inputY*tileWidth + inputX;
-      
-      if(outputIndex < pixels.length && inputIndex < tilePixels.length) {
-      pixels[outputIndex] = tilePixels[inputIndex];
+        if (outputIndex < tilePixels.length && inputIndex < img.pixels.length) {
+          tilePixels[outputIndex] = img.pixels[inputIndex];
+        }
       }
-     }
-   }
-   
+    }
+  }
+
+
+  /*
+   Displays the tile at the coordinates (x,y) on the output image
+  */
+  void drawAt(int x, int y) {
+    for (int i = x, inputX = 0; i < x+tileWidth; i++, inputX++) {
+      for (int j = y, inputY = 0; j < y+tileHeight; j++, inputY++) {
+        int outputIndex = j*width + i;
+        int inputIndex = inputY*tileWidth + inputX;
+
+        if (outputIndex < pixels.length && inputIndex < tilePixels.length) {
+          pixels[outputIndex] = tilePixels[inputIndex];
+        }
+      }
+    }
   }
 
   /*
@@ -70,19 +74,11 @@ class Tile {
     }
 
     Tile other = (Tile)obj;
-    img.loadPixels();
-    
-    // pixel comparision
-    for (int i = 0; i < tileHeight; i++) {
-      for (int j = 0; j < tileWidth; j++) {
-        int thisIndex = (y+i)*img.width + (x+j);
-        int otherIndex = (other.y+i)*img.width + (other.x + j);
-        if(thisIndex < img.pixels.length && otherIndex < img.pixels.length) {
 
-        if (img.pixels[thisIndex] != img.pixels[otherIndex]) {
-          return false;
-        }
-        }
+    // pixel comparision
+    for (int i = 0; i < tilePixels.length; i++) {
+      if (tilePixels[i] != other.tilePixels[i]) {
+        return false;
       }
     }
 
@@ -94,34 +90,27 @@ class Tile {
     public int hashCode() {
     int val = 0;
     img.loadPixels();
-    for (int i = 0; i < tileHeight; i++) {
-      for (int j = 0; j < tileWidth; j++) {
-        int thisIndex = (y+i)*img.width + (x+j);
-        if(thisIndex < img.pixels.length) {
-        color c = img.pixels[thisIndex];
-        float r = (c >> 16) & 0xFF;
-        val += r*3;
-        float g = (c >> 8) & 0xFF;
-        val += g*5;
-        
-        float b = c & 0xFF;
-        val += b*7;
-        }
-      }
+    for (int i = 0; i < tilePixels.length; i++) {
+      color c = tilePixels[i];
+      float r = (c >> 16) & 0xFF;
+      val += r*3;
+      float g = (c >> 8) & 0xFF;
+      val += g*5;
+
+      float b = c & 0xFF;
+      val += b*7;
     }
-    
+
     return val;
   }
-  
-  
+
+
   /*
   For debugging purposes, currently just prints color value of first pixel
-  */
+   */
   @Override
     public String toString() {
-     img.loadPixels();
-     int thisIndex = (y)*img.width + (x);
-     color c = img.pixels[thisIndex];
+    color c = tilePixels[0];
     return "[" + this.x + "," + this.y + "] " + hex(c);
   }
 }

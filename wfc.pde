@@ -9,9 +9,12 @@ long seed = System.nanoTime();
 //input that the output is based on
 PImage img = new PImage();
 
-final int dimension = 4;
+// this is the size of the tile (pattern)
+final int dimension = 2;
 void settings() {
-  int w = (int)Math.pow(dimension, 5);
+  // this is not necessary but it makes for nicer looking images
+  // the dimensions could theoretically be anything
+  int w = (int)Math.pow(dimension, 8);
   size(w, w);
 }
 
