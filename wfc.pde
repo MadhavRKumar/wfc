@@ -9,7 +9,7 @@ long seed = System.nanoTime();
 //input that the output is based on
 PImage img = new PImage();
 
-final int dimension = 3;
+final int dimension = 4;
 void settings() {
   int w = (int)Math.pow(dimension, 5);
   size(w, w);
@@ -46,10 +46,8 @@ HashSet<Compatibility> parseInput(PImage img, int n, int m) {
       }
     }
   }
-
   return compats;
 }
-
 
 /*
 Generic helper function that gives valid directions based on position, grid dimensions,
@@ -77,7 +75,6 @@ ArrayList<Direction> getValidDirections(int x, int y, int w, int h, int inc) {
 
   return dirs;
 }
-
 
 /*
 Like parseInput, this goes through the input but calculates
@@ -111,7 +108,6 @@ void fileSelected(File f) {
 
     Model model = new Model(weights, compats);
     model.run();
- 
   }
 }
 

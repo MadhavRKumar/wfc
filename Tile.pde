@@ -8,24 +8,43 @@ class Tile {
   int y;
   int tileWidth; 
   int tileHeight;
-
+  color[] tilePixels;
+  
   public Tile(int x, int y, int N, int M) {
     this.x = x;
     this.y = y;
     this.tileWidth = N;
     this.tileHeight = M;
+    tilePixels = new color[N*M];
+    fillPixels();
+  }
+  
+  void fillPixels() {
+    img.loadPixels();
+    for(int i = 0, inputX = this.x; i < tileWidth; i++, inputX++) {
+      for(int j = 0, inputY = this.y; j < tileHeight; j++, inputY++) {
+      int outputIndex = j*tileWidth + i;
+      int inputIndex = inputY*img.width + inputX;
+      
+      if(outputIndex < tilePixels.length && inputIndex < img.pixels.length) {
+        tilePixels[outputIndex] = img.pixels[inputIndex];
+      }
+     }
+   }
+    
+
   }
   
   
   void drawAt(int x, int y) {
    img.loadPixels();
-   for(int i = x, inputX = this.x; i < x+tileWidth; i++, inputX++) {
-    for(int j = y, inputY = this.y; j < y+tileHeight; j++, inputY++) {
+   for(int i = x, inputX = 0; i < x+tileWidth; i++, inputX++) {
+    for(int j = y, inputY = 0; j < y+tileHeight; j++, inputY++) {
       int outputIndex = j*width + i;
-      int inputIndex = inputY*img.width + inputX;
+      int inputIndex = inputY*tileWidth + inputX;
       
-      if(outputIndex < pixels.length && inputIndex < img.pixels.length) {
-      pixels[outputIndex] = img.pixels[inputIndex];
+      if(outputIndex < pixels.length && inputIndex < tilePixels.length) {
+      pixels[outputIndex] = tilePixels[inputIndex];
       }
      }
    }
